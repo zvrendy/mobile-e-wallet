@@ -3,19 +3,18 @@ import 'dart:io';
 
 import 'package:bank_sha_rafi/models/sign_up_form_model.dart';
 import 'package:bank_sha_rafi/shared/theme.dart';
+import 'package:bank_sha_rafi/shared/helpers.dart';
 import 'package:bank_sha_rafi/ui/pages/sign_up_set_ktp_page.dart';
 import 'package:bank_sha_rafi/ui/widgets/buttons.dart';
 import 'package:bank_sha_rafi/ui/widgets/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:bank_sha_rafi/ui/pages/home_page.dart';
 
 class SignUpSetProfilePage extends StatefulWidget {
   final SignUpFormModel data;
 
-  const SignUpSetProfilePage({
-    Key? key,
-    required this.data,
-  }) : super(key: key);
+  const SignUpSetProfilePage({super.key, required this.data});
 
   @override
   State<SignUpSetProfilePage> createState() => _SignUpSetProfilePageState();
@@ -25,16 +24,22 @@ class _SignUpSetProfilePageState extends State<SignUpSetProfilePage> {
   final pinController = TextEditingController(text: '');
   XFile? selectedImage;
 
-  selectImage() async {
-    final imagePicker = ImagePicker();
-    final XFile? image =
-        await imagePicker.pickImage(source: ImageSource.gallery);
 
-    if (image != null) {
-      setState(() {
-        selectedImage = image;
-      });
+  Future<XFile?> selectImage() async {
+    final imagePicker = ImagePicker();
+    final XFile? image = await imagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    return image;
+  }
+
+  
+  bool validate() {
+    if (pinController.text.length != 6) {
+      return false;
     }
+    return true;
   }
 
   @override
@@ -79,8 +84,11 @@ class _SignUpSetProfilePageState extends State<SignUpSetProfilePage> {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () {
-                    selectImage();
+                  onTap: () async {
+                    final image = await selectImage();
+                    setState(() {
+                      selectedImage = image;
+                    });
                   },
                   child: Container(
                     width: 120,
@@ -113,7 +121,7 @@ class _SignUpSetProfilePageState extends State<SignUpSetProfilePage> {
                   height: 16,
                 ),
                 Text(
-                  'Shayna Hanna',
+                  widget.data.name, // Use the name from the SignUpFormModel
                   style: blackTextStyle.copyWith(
                     fontSize: 18,
                     fontWeight: medium,
@@ -126,6 +134,7 @@ class _SignUpSetProfilePageState extends State<SignUpSetProfilePage> {
                   title: 'Set PIN (6 digit number)',
                   obscureText: true,
                   controller: pinController,
+                  keyboardType: TextInputType.number,
                 ),
                 const SizedBox(
                   height: 30,
@@ -133,31 +142,24 @@ class _SignUpSetProfilePageState extends State<SignUpSetProfilePage> {
                 CustomFilledButton(
                   title: 'Continue',
                   onPressed: () {
-                    if (pinController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text(
-                            'Field PIN harus diisi',
-                          ),
-                          backgroundColor: redColor,
-                        ),
-                      );
-                    } else {
+                    if (validate()) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => SignUpSetKtpPage(
                             data: widget.data.copyWith(
-                              profilePicture: selectedImage == null
-                                  ? null
-                                  : 'data:image/png;base64,' +
-                                      base64Encode(File(selectedImage!.path)
-                                          .readAsBytesSync()),
-                              pin: pinController.text,
-                            ),
+                                pin: pinController.text,
+                                profilePicture: selectedImage == null
+                                    ? null
+                                    : 'data:image/png;base64,${base64Encode(
+                                        File(selectedImage!.path)
+                                            .readAsBytesSync(),
+                                      )}'),
                           ),
                         ),
                       );
+                    } else {
+                      showCustomSnackbar(context, 'PIN harus 6 digit.');
                     }
                   },
                 ),

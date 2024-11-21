@@ -28,3 +28,12 @@ class AuthSuccess extends AuthState {
   @override
   List<Object> get props => [data];
 }
+
+// @freezed
+// class AuthState with _$AuthState {
+//   const factory AuthState.initial() = _Initial;
+//   const factory AuthState.loading() = _Loading;
+//   const factory AuthState.successSignUp(SignUpFormModel signUpFormModel) =
+//       _SuccessSignUp;
+//   const factory AuthState.error(String message) = _Error;
+// }

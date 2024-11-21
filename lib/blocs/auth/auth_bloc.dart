@@ -4,13 +4,34 @@ import 'package:bank_sha_rafi/models/user_edit_form_model.dart';
 import 'package:bank_sha_rafi/models/user_model.dart';
 import 'package:bank_sha_rafi/services/auth_service.dart';
 import 'package:bank_sha_rafi/services/wallet_service.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
+// part 'auth_bloc.freezed.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  // final AuthService authService;
+  // AuthBloc(
+  //   this.authService,
+  // ) : super(const _Initial()) {
+  //   on<_SignUp>((event, emit) async {
+  //     emit(const _Loading());
+  //     final response = await authService.signUp(
+  //       event.email,
+  //       event.password,
+  //       event.name,
+  //       event.nim,
+  //     );
+
+  //     response.fold(
+  //       (l) => emit(_Error(l)),
+  //       (r) => emit(_SuccessSignUp(r)),
+  //     );
+  //   });
+  // }
   AuthBloc() : super(AuthInitial()) {
     on<AuthEvent>((event, emit) async {
       if (event is AuthCheckEmail) {

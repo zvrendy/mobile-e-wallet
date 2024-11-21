@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bank_sha_rafi/blocs/auth/auth_bloc.dart';
 import 'package:bank_sha_rafi/models/sign_up_form_model.dart';
+import 'package:bank_sha_rafi/shared/helpers.dart';
 import 'package:bank_sha_rafi/shared/theme.dart';
 import 'package:bank_sha_rafi/ui/widgets/buttons.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,9 @@ class SignUpSetKtpPage extends StatefulWidget {
   final SignUpFormModel data;
 
   const SignUpSetKtpPage({
-    Key? key,
+    super.key,
     required this.data,
-  }) : super(key: key);
+  });
 
   @override
   State<SignUpSetKtpPage> createState() => _SignUpSetKtpPageState();
@@ -24,41 +25,52 @@ class SignUpSetKtpPage extends StatefulWidget {
 class _SignUpSetKtpPageState extends State<SignUpSetKtpPage> {
   XFile? selectedImage;
 
-  selectImage() async {
-    final imagePicker = ImagePicker();
-    final XFile? image =
-        await imagePicker.pickImage(source: ImageSource.gallery);
+//   Future<XFile?> selectImage() async {
+//   final imagePicker = ImagePicker();
+//   final XFile? image = await imagePicker.pickImage(
+//     source: ImageSource.gallery,
+//   );
+  
+//   return image;
+// }
 
-    if (image != null) {
-      setState(() {
-        selectedImage = image;
-      });
+  bool validate() {
+    if (selectedImage == null) {
+      return false;
     }
+    return true;
   }
+  
+  
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthSuccess) {
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-        }
-      },
-      builder: (context, state) {
-        if (state is AuthLoading) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
+    return Scaffold(
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          // TODO: implement listener
 
-        return Scaffold(
-          body: ListView(
+          if (state is AuthFailed) {
+            showCustomSnackbar(context, state.e);
+          }
+
+          if (state is AuthSuccess) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/home', (route) => false);
+          }
+        },
+        builder: (context, state) {
+          if (state is AuthLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return ListView(
             padding: const EdgeInsets.symmetric(
               horizontal: 24,
             ),
             children: [
+              //* Best Practice for Image Asset inside Container
               Container(
                 width: 155,
                 height: 50,
@@ -75,7 +87,7 @@ class _SignUpSetKtpPageState extends State<SignUpSetKtpPage> {
                 ),
               ),
               Text(
-                'Verify Your\nAccount',
+                'Verify Your \nAccount',
                 style: blackTextStyle.copyWith(
                   fontSize: 20,
                   fontWeight: semiBold,
@@ -87,14 +99,15 @@ class _SignUpSetKtpPageState extends State<SignUpSetKtpPage> {
               Container(
                 padding: const EdgeInsets.all(22),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: whiteColor,
-                ),
+                    borderRadius: BorderRadius.circular(20), color: whiteColor),
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        selectImage();
+                      onTap: () async {
+                        final image = await selectImage();
+                        setState(() {
+                          selectedImage = image;
+                        });
                       },
                       child: Container(
                         width: 120,
@@ -107,9 +120,7 @@ class _SignUpSetKtpPageState extends State<SignUpSetKtpPage> {
                               : DecorationImage(
                                   fit: BoxFit.cover,
                                   image: FileImage(
-                                    File(
-                                      selectedImage!.path,
-                                    ),
+                                    File(selectedImage!.path),
                                   ),
                                 ),
                         ),
@@ -129,35 +140,31 @@ class _SignUpSetKtpPageState extends State<SignUpSetKtpPage> {
                     Text(
                       'Passport/ID Card',
                       style: blackTextStyle.copyWith(
-                        fontSize: 18,
-                        fontWeight: medium,
-                      ),
+                          fontSize: 18, fontWeight: medium),
                     ),
                     const SizedBox(
                       height: 50,
                     ),
+                    //* Button : Continue
                     CustomFilledButton(
                       title: 'Continue',
                       onPressed: () {
-                        if (selectedImage == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text(
-                                'Gambar tidak boleh kosong',
-                              ),
-                              backgroundColor: redColor,
-                            ),
-                          );
-                        } else {
+                        if (validate()) {
                           context.read<AuthBloc>().add(
                                 AuthRegister(
                                   widget.data.copyWith(
-                                    ktp: 'data:image/png;base64,' +
-                                        base64Encode(File(selectedImage!.path)
-                                            .readAsBytesSync()),
+                                    ktp: selectedImage == null
+                                        ? null
+                                        : 'data:image/png;base64,${base64Encode(
+                                            File(selectedImage!.path)
+                                                .readAsBytesSync(),
+                                          )}',
                                   ),
                                 ),
                               );
+                        } else {
+                          showCustomSnackbar(
+                              context, 'Gambar tidak boleh kosong.');
                         }
                       },
                     ),
@@ -170,13 +177,15 @@ class _SignUpSetKtpPageState extends State<SignUpSetKtpPage> {
               CustomTextButton(
                 title: 'Skip for Now',
                 onPressed: () {
-                  Navigator.pushNamed(context, '/sign-up-success');
+                  context.read<AuthBloc>().add(
+                        AuthRegister(widget.data),
+                      );
                 },
               ),
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

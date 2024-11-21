@@ -1,7 +1,5 @@
 import 'package:bank_sha_rafi/blocs/user/user_bloc.dart';
 import 'package:bank_sha_rafi/shared/theme.dart';
-import 'package:bank_sha_rafi/ui/pages/data_provider_page.dart';
-import 'package:bank_sha_rafi/ui/pages/data_success_page.dart';
 import 'package:bank_sha_rafi/ui/pages/home_page.dart';
 import 'package:bank_sha_rafi/ui/pages/onboarding_page.dart';
 import 'package:bank_sha_rafi/ui/pages/pin_page.dart';
@@ -70,8 +68,8 @@ class MyApp extends StatelessWidget {
           '/topup-success': (context) => const TopupSuccessPage(),
           '/transfer': (context) => const TransferPage(),
           '/transfer-success': (context) => const TransferSuccessPage(),
-          '/data-provider': (context) => const DataProviderPage(),
-          '/data-success': (context) => const DataSuccessPage(),
+
+          '/sign-out': (context) => const OnboardingPage(),
         },
       ),
     );

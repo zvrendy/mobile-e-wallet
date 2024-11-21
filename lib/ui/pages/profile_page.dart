@@ -140,7 +140,9 @@ class ProfilePage extends StatelessWidget {
                       ProfileMenuItem(
                         iconUrl: 'assets/ic_logout.png',
                         title: 'Log Out',
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, '/sign-out');
+                        },
                       ),
                     ],
                   ),

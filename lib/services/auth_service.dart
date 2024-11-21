@@ -6,6 +6,7 @@ import 'package:bank_sha_rafi/models/user_edit_form_model.dart';
 import 'package:bank_sha_rafi/models/user_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:dartz/dartz.dart';
 
 class AuthService {
   final String baseUrl = 'https://bwabank.my.id/api';
@@ -40,6 +41,8 @@ class AuthService {
         body: data.toJson(),
       );
 
+       // Print response body for debugging
+    print('Response body: ${res.body}');
       
 
       if (res.statusCode == 200 || res.statusCode == 201) {
@@ -155,4 +158,18 @@ class AuthService {
       rethrow;
     }
   }
+
+  // auth login
+  // Future<Either<String, SignUpFormModel>> signUp(
+  //     String email, String password, String name, String nim) async {
+  //   final response =
+  //       await http.post(Uri.parse('${baseUrl}/register'),
+  //           // headers: {'User-Agent': Variables.userAgent},
+  //           body: {'email': email, 'password': password, 'name': name, 'nim': nim});
+  //   if (response.statusCode == 200) {
+  //     return right(SignUpFormModel.fromJson(response.body));
+  //   } else {
+  //     return left(response.body);
+  //   }
+  // }
 }
