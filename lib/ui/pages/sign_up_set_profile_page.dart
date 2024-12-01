@@ -25,14 +25,14 @@ class _SignUpSetProfilePageState extends State<SignUpSetProfilePage> {
   XFile? selectedImage;
 
 
-  Future<XFile?> selectImage() async {
-    final imagePicker = ImagePicker();
-    final XFile? image = await imagePicker.pickImage(
-      source: ImageSource.gallery,
-    );
+  // Future<XFile?> selectImage() async {
+  //   final imagePicker = ImagePicker();
+  //   final XFile? image = await imagePicker.pickImage(
+  //     source: ImageSource.gallery,
+  //   );
 
-    return image;
-  }
+  //   return image;
+  // }
 
   
   bool validate() {

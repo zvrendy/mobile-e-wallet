@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:dartz/dartz.dart';
 
 class AuthService {
-  final String baseUrl = 'https://bwabank.my.id/api';
+  final String baseUrl = 'http://10.0.2.2:8000';
 
   Future<bool> checkEmail(String email) async {
     try {
@@ -36,7 +36,7 @@ class AuthService {
     try {
       final res = await http.post(
         Uri.parse(
-          '$baseUrl/register',
+          '$baseUrl/user/register',
         ),
         body: data.toJson(),
       );
@@ -64,7 +64,7 @@ class AuthService {
     try {
       final res = await http.post(
         Uri.parse(
-          '$baseUrl/login',
+          '$baseUrl/user/login',
         ),
         body: data.toJson(),
       );

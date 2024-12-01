@@ -2,7 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:bank_sha_rafi/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'package:image_picker/image_picker.dart';
 void showCustomSnackbar(BuildContext context, String message) {
   Flushbar(
     message: message,
@@ -30,4 +30,13 @@ String formatTransactionCurrency(num number) {
     symbol: '',
     decimalDigits: 0,
   ).format(number);
+}
+
+  Future<XFile?> selectImage() async {
+  final imagePicker = ImagePicker();
+  final XFile? image = await imagePicker.pickImage(
+    source: ImageSource.gallery,
+  );
+  
+  return image;
 }

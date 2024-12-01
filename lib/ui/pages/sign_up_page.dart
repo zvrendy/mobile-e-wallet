@@ -21,15 +21,75 @@ class _SignUpPageState extends State<SignUpPage> {
   final emailController = TextEditingController(text: '');
   final passwordController = TextEditingController(text: '');
   final nimController = TextEditingController(text: '');
+  int? selectRoleId = 2;
 
   bool validate() {
     if (nameController.text.isEmpty ||
         emailController.text.isEmpty ||
-        passwordController.text.isEmpty ||
-        nimController.text.isEmpty) {
+        passwordController.text.isEmpty) {
+      return false;
+    }
+    if (selectRoleId == 2 && nimController.text.isEmpty) {
       return false;
     }
     return true;
+  }
+
+  Widget _buildRoleDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Role',
+          style: blackTextStyle.copyWith(
+            fontSize: 16,
+            fontWeight: regular,
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
+          decoration: BoxDecoration(
+            color: lightGreyColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<int>(
+              value: selectRoleId,
+              items: SignUpFormModel.roles.entries
+                  .map(
+                    (e) => DropdownMenuItem<int>(
+                      value: e.key,
+                      child: Text(
+                        SignUpFormModel.getRoleDisplayName(e.value),
+                        style: blackTextStyle.copyWith(
+                          fontSize: 16,
+                          fontWeight: regular,
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (int? value) {
+                if (value != null) {
+                  setState(() {
+                    selectRoleId = value;
+                  });
+                }
+              },
+              isExpanded: true,
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+              dropdownColor: lightGreyColor,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -47,6 +107,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     email: emailController.text,
                     password: passwordController.text,
                     nim: nimController.text,
+                    roleId: selectRoleId?.toInt() ?? 2,
                     pin: '',
                   ),
                 ),
@@ -117,10 +178,17 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(
                       height: 16,
                     ),
-                    CustomFormField(
-                      title: 'NIM',
-                      controller: nimController,
+                    _buildRoleDropdown(),
+                    const SizedBox(
+                      height: 16,
                     ),
+                    if (selectRoleId == 2) ...[
+                      CustomFormField(
+                        title: 'NIM',
+                        controller: nimController,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     const SizedBox(
                       height: 16,
                     ),

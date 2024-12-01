@@ -7,9 +7,31 @@ class SignUpFormModel {
   final String? pin;
   final String? profilePicture;
   final String? ktp;
-  final String? id;
-  final String? roleId;
+  final int roleId;
   final String? nim;
+
+  // roles from API
+  static const Map<int, String> roles = {
+    1: 'admin',
+    2: 'upnvj_student',
+    3: 'general',
+    4: 'high_school_student',
+  };
+
+  static dynamic getRoleDisplayName(dynamic roleName) {
+    switch (roleName) {
+      case 'admin':
+        return 'Admin';
+      case 'upnvj_student':
+        return 'Mahasiswa UPNVJ';
+      case 'general':
+        return 'Umum';
+      case 'high_school_student':
+        return 'Siswa SMA';
+      default:
+        return roleName;
+    }
+  }
 
   SignUpFormModel({
     required this.name,
@@ -18,12 +40,10 @@ class SignUpFormModel {
     this.pin,
     this.profilePicture,
     this.ktp,
-    this.id,
-    this.roleId,
+    required this.roleId,
     this.nim,
-  
   });
-  
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,
@@ -31,12 +51,23 @@ class SignUpFormModel {
       'password': password,
       'pin': pin,
       'profile_picture': profilePicture,
-      'ktp': ktp ,
-      'id': id,
-      'role_id':roleId,
-      'nim':nim,
-    
+      'ktp': ktp,
+      'role_id': roleId.toString(),
+      'nim': nim,
     };
+  }
+
+  factory SignUpFormModel.fromJson(Map<String, dynamic> json) {
+    return SignUpFormModel(
+      name: json['name'] as String,
+      email: json['email'] as String?,
+      password: json['password'] as String?,
+      pin: json['pin'] as String?,
+      profilePicture: json['profile_picture'] as String?,
+      ktp: json['ktp'] as String?,
+      roleId: json['role_id'],
+      nim: json['nim'] as String?,
+    );
   }
 
   SignUpFormModel copyWith({
@@ -46,10 +77,8 @@ class SignUpFormModel {
     String? pin,
     String? profilePicture,
     String? ktp,
-    String? roleId,
+    int? roleId,
     String? nim,
-  
-  
   }) =>
       SignUpFormModel(
         name: name ?? this.name,
@@ -60,10 +89,7 @@ class SignUpFormModel {
         ktp: ktp ?? this.ktp,
         roleId: roleId ?? this.roleId,
         nim: nim ?? this.nim,
-      
-      
       );
-
 
   //auth
   //     factory SignUpFormModel.fromJson(String str) =>
@@ -83,5 +109,4 @@ class SignUpFormModel {
   //       "email": email,
   //       "password": password,
   //     };
-
 }

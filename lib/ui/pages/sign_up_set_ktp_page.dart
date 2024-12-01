@@ -25,15 +25,6 @@ class SignUpSetKtpPage extends StatefulWidget {
 class _SignUpSetKtpPageState extends State<SignUpSetKtpPage> {
   XFile? selectedImage;
 
-//   Future<XFile?> selectImage() async {
-//   final imagePicker = ImagePicker();
-//   final XFile? image = await imagePicker.pickImage(
-//     source: ImageSource.gallery,
-//   );
-  
-//   return image;
-// }
-
   bool validate() {
     if (selectedImage == null) {
       return false;
