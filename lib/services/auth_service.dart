@@ -4,13 +4,12 @@ import 'package:bank_sha_rafi/models/sign_in_form_model.dart';
 import 'package:bank_sha_rafi/models/sign_up_form_model.dart';
 import 'package:bank_sha_rafi/models/user_edit_form_model.dart';
 import 'package:bank_sha_rafi/models/user_model.dart';
+import 'package:bank_sha_rafi/shared/api_path.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:dartz/dartz.dart';
 
 class AuthService {
-  final String baseUrl = 'http://10.0.2.2:8000';
-
   Future<bool> checkEmail(String email) async {
     try {
       final res = await http.post(
@@ -21,7 +20,7 @@ class AuthService {
           'email': email,
         },
       );
-
+      print(email);
       if (res.statusCode == 200) {
         return jsonDecode(res.body)['is_email_exist'];
       } else {
@@ -40,10 +39,9 @@ class AuthService {
         ),
         body: data.toJson(),
       );
-
-       // Print response body for debugging
-    print('Response body: ${res.body}');
-      
+      print(data);
+      // Print response body for debugging
+      print('Response body: ${res.body}');
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         final user = UserModel.fromJson(jsonDecode(res.body));
@@ -68,7 +66,7 @@ class AuthService {
         ),
         body: data.toJson(),
       );
-
+      print(res);
       if (res.statusCode == 200 || res.statusCode == 201) {
         final user = UserModel.fromJson(jsonDecode(res.body));
         user.password = data.password;
@@ -124,7 +122,7 @@ class AuthService {
     String? value = await storage.read(key: 'token');
 
     if (value != null) {
-      token = value;
+      token = 'Bearer $value';
     }
 
     return token;

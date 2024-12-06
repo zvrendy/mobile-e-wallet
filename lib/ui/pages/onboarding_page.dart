@@ -1,7 +1,7 @@
 import 'package:bank_sha_rafi/shared/theme.dart';
 import 'package:bank_sha_rafi/ui/widgets/buttons.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({Key? key}) : super(key: key);

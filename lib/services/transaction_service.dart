@@ -5,23 +5,23 @@ import 'package:bank_sha_rafi/models/topup_form_model.dart';
 import 'package:bank_sha_rafi/models/transaction_model.dart';
 import 'package:bank_sha_rafi/models/transfer_form_model.dart';
 import 'package:bank_sha_rafi/services/auth_service.dart';
+import 'package:bank_sha_rafi/shared/api_path.dart';
 import 'package:http/http.dart' as http;
 
 class TransactionService {
-  final String baseUrl = 'http://10.0.2.2:8000';
-
   Future<List<PaymentMethodModel>> getPaymentMethods() async {
     try {
       final token = await AuthService().getToken();
-
       final res = await http.get(
         Uri.parse('$baseUrl/payment_methods'),
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': token,
         },
       );
+      print(res);
 
       if (res.statusCode == 200) {
+        print(res.body);
         List<PaymentMethodModel> paymentMethods = List<PaymentMethodModel>.from(
           jsonDecode(res.body).map(
             (paymentMethod) => PaymentMethodModel.fromJson(paymentMethod),
@@ -44,11 +44,11 @@ class TransactionService {
       final res = await http.post(
         Uri.parse('$baseUrl/top_ups'),
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': token,
         },
         body: data.toJson(),
       );
-
+      print(data);
       if (res.statusCode == 200) {
         return jsonDecode(res.body)['redirect_url'];
       }

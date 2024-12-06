@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class SignUpFormModel {
-  final String name;
+  final String? name;
   final String? email;
   final String? password;
   final String? pin;
@@ -34,7 +34,7 @@ class SignUpFormModel {
   }
 
   SignUpFormModel({
-    required this.name,
+    this.name,
     this.email,
     this.password,
     this.pin,
@@ -65,15 +65,12 @@ class SignUpFormModel {
       pin: json['pin'] as String?,
       profilePicture: json['profile_picture'] as String?,
       ktp: json['ktp'] as String?,
-      roleId: json['role_id'],
+      roleId: int.parse(json['role_id'].toString()),
       nim: json['nim'] as String?,
     );
   }
 
   SignUpFormModel copyWith({
-    String? name,
-    String? email,
-    String? password,
     String? pin,
     String? profilePicture,
     String? ktp,
@@ -81,9 +78,9 @@ class SignUpFormModel {
     String? nim,
   }) =>
       SignUpFormModel(
-        name: name ?? this.name,
-        email: email ?? this.email,
-        password: password ?? this.password,
+        name: name,
+        email: email,
+        password: password,
         pin: pin ?? this.pin,
         profilePicture: profilePicture ?? this.profilePicture,
         ktp: ktp ?? this.ktp,

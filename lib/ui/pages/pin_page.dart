@@ -60,7 +60,7 @@ class _PinPageState extends State<PinPage> {
           body: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 58,
+                horizontal: 48,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

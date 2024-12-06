@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:bank_sha_rafi/shared/helpers.dart';
 
 class TopupAmountPage extends StatefulWidget {
   final TopupFormModel data;
@@ -38,7 +40,7 @@ class _TopupAmountPageState extends State<TopupAmountPage> {
           symbol: '',
         ).format(
           int.parse(
-            text.replaceAll('.', ''),
+            text == '' ? '0' : text.replaceAll('.', ''),
           ),
         ),
       );
@@ -74,8 +76,12 @@ class _TopupAmountPageState extends State<TopupAmountPage> {
         create: (context) => TopupFormBloc(),
         child: BlocConsumer<TopupFormBloc, TopupFormState>(
           listener: (context, state) async {
+            if (state is TopupFormFailed) {
+              showCustomSnackbar(context, state.e);
+            }
             if (state is TopupFormSuccess) {
-              launch(state.redirectUrl);
+              await launchUrlString(state.redirectUrl);
+              if (!context.mounted) return;
               context.read<AuthBloc>().add(
                     AuthUpdateBalance(
                       int.parse(
@@ -83,17 +89,20 @@ class _TopupAmountPageState extends State<TopupAmountPage> {
                       ),
                     ),
                   );
-              Navigator.pushNamed(context, '/topup-success');
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/topup-success', (route) => false);
+              }
             }
           },
           builder: (context, state) {
             return ListView(
               padding: const EdgeInsets.symmetric(
-                horizontal: 58,
+                horizontal: 48,
               ),
               children: [
                 const SizedBox(
-                  height: 60,
+                  height: 50,
                 ),
                 Center(
                   child: Text(
@@ -234,6 +243,7 @@ class _TopupAmountPageState extends State<TopupAmountPage> {
                   title: 'Checkout Now',
                   onPressed: () async {
                     if (await Navigator.pushNamed(context, '/pin') == true) {
+                      if (!context.mounted) return;
                       final authState = context.read<AuthBloc>().state;
                       String pin = '';
                       if (authState is AuthSuccess) {

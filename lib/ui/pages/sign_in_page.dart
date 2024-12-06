@@ -5,6 +5,7 @@ import 'package:bank_sha_rafi/ui/widgets/buttons.dart';
 import 'package:bank_sha_rafi/ui/widgets/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bank_sha_rafi/shared/helpers.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -17,10 +18,20 @@ class _SignInPageState extends State<SignInPage> {
   final emailController = TextEditingController(text: '');
   final passwordController = TextEditingController(text: '');
 
+  bool validate() {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
+        if (state is AuthFailed) {
+          showCustomSnackbar(context, state.e);
+        }
         if (state is AuthSuccess) {
           Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         }
@@ -104,14 +115,19 @@ class _SignInPageState extends State<SignInPage> {
                     CustomFilledButton(
                       title: 'Sign In',
                       onPressed: () {
-                        context.read<AuthBloc>().add(
-                              AuthLogin(
-                                SignInFormModel(
-                                  email: emailController.text,
-                                  password: passwordController.text,
+                        if (validate()) {
+                          context.read<AuthBloc>().add(
+                                AuthLogin(
+                                  SignInFormModel(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                        } else {
+                          showCustomSnackbar(
+                              context, 'Semua Field harus diisi.');
+                        }
                       },
                     ),
                   ],

@@ -9,34 +9,34 @@ class SignInFormModel {
     this.password,
   });
 
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'email': email,
-  //     'password': password,
-  //   };
-  // }
-  factory SignInFormModel.fromJson(String str) =>
-      SignInFormModel.fromMap(json.decode(str));
+  Map<String, dynamic> toJson() {
+    return {
+      'email': email,
+      'password': password,
+    };
+  }
+  // factory SignInFormModel.fromJson(String str) =>
+  //     SignInFormModel.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
+  // String toJson() => json.encode(toMap());
 
-  factory SignInFormModel.fromMap(Map<String, dynamic> json) =>
-      SignInFormModel(
-        email: json["email"],
-        password: json["password"],
-      );
+  // factory SignInFormModel.fromMap(Map<String, dynamic> json) =>
+  //     SignInFormModel(
+  //       email: json["email"],
+  //       password: json["password"],
+  //     );
 
-  Map<String, dynamic> toMap() => {
-        "email": email,
-        "password": password,
-      };
+  // Map<String, dynamic> toMap() => {
+  //       "email": email,
+  //       "password": password,
+  //     };
 
-  SignInFormModel copyWith({
-    String? email,
-    String? password,
-  }) =>
-      SignInFormModel(
-        email: email ?? this.email,
-        password: password ?? this.password,
-      );
+  // SignInFormModel copyWith({
+  //   String? email,
+  //   String? password,
+  // }) =>
+  //     SignInFormModel(
+  //       email: email ?? this.email,
+  //       password: password ?? this.password,
+  //     );
 }

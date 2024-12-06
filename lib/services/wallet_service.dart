@@ -1,11 +1,10 @@
 import 'dart:convert';
 
 import 'package:bank_sha_rafi/services/auth_service.dart';
+import 'package:bank_sha_rafi/shared/api_path.dart';
 import 'package:http/http.dart' as http;
 
 class WalletService {
-  final String baseUrl = 'http://10.0.2.2:8000';
-
   Future<void> updatePin(String oldPin, String newPin) async {
     try {
       final String token = await AuthService().getToken();

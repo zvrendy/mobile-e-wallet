@@ -134,7 +134,7 @@ class HomePage extends StatelessWidget {
                       height: 2,
                     ),
                     Text(
-                      state.data.username.toString(),
+                      state.data.email.toString(),
                       style: blackTextStyle.copyWith(
                         fontSize: 20,
                         fontWeight: semiBold,
@@ -216,7 +216,7 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  state.data.name!,
+                  state.data.name.toString(),
                   style: whiteTextStyle.copyWith(
                     fontSize: 18,
                     fontWeight: medium,
@@ -230,7 +230,7 @@ class HomePage extends StatelessWidget {
                   style: whiteTextStyle.copyWith(
                     fontSize: 18,
                     fontWeight: medium,
-                    letterSpacing: 6,
+                    letterSpacing: 3,
                   ),
                 ),
                 const SizedBox(
@@ -241,7 +241,7 @@ class HomePage extends StatelessWidget {
                   style: whiteTextStyle,
                 ),
                 Text(
-                  formatCurrency(state.data.balance!),
+                  formatCurrency(state.data.balance ?? 0),
                   style: whiteTextStyle.copyWith(
                     fontSize: 24,
                     fontWeight: semiBold,

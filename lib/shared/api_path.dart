@@ -1,3 +1,1 @@
-class ApiPath {
-  static const String baseUrl = 'https://bwabank.tech/api';
-}
+String baseUrl = 'https://ladybug-giving-barnacle.ngrok-free.app';

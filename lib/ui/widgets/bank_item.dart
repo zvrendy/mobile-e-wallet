@@ -31,7 +31,7 @@ class BankItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Image.network(
-            data.thumbnail!,
+            data.thumbnail.toString(),
             height: 30,
           ),
           Column(
