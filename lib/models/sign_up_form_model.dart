@@ -51,7 +51,7 @@ class SignUpFormModel {
       'password': password,
       'pin': pin,
       'profile_picture': profilePicture,
-      'ktp': ktp,
+      'ktp': ktp ?? "",
       'role_id': roleId.toString(),
       'nim': nim,
     };
